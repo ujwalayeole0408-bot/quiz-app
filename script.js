@@ -303,7 +303,7 @@ function showQuestion() {
     filteredQuestions[currentQuestionIndex];
 
   questionElement.innerText =
-    currentQuestion.question;
+  `Question ${currentQuestionIndex + 1}/25: ${currentQuestion.question}`;
 
   currentQuestion.answers.forEach(answer => {
 
