@@ -1,4 +1,5 @@
 const questions = [
+  
 
   {
     category: "html",
@@ -274,8 +275,12 @@ const questions = [
       { text: "<p>", correct: false }
     ]
   }
-
 ];
+
+let timer;
+let timeLeft = 10;
+const timerElement = document.getElementById("timer");
+
 let filteredQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
@@ -298,6 +303,7 @@ const nextBtn = document.getElementById("next-btn");
 function showQuestion() {
 
   resetState();
+  startTimer();
 
   let currentQuestion =
     filteredQuestions[currentQuestionIndex];
@@ -330,7 +336,48 @@ function resetState() {
   }
 }
 
+function startTimer() {
+
+  clearInterval(timer);
+
+  timeLeft = 10;
+
+  timerElement.innerText = `Time Left: ${timeLeft}s`;
+
+  timer = setInterval(() => {
+
+    timeLeft--;
+
+    timerElement.innerText = `Time Left: ${timeLeft}s`;
+
+    if (timeLeft <= 0) {
+
+      clearInterval(timer);
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < filteredQuestions.length) {
+
+        showQuestion();
+
+      } else {
+
+        questionElement.innerText =
+          `Quiz Finished 🎉 Your Score: ${score}/25`;
+
+        answerButtons.innerHTML = "";
+
+        nextBtn.style.display = "none";
+
+        timerElement.innerText = "";
+      }
+    }
+
+  }, 1000);
+}
 function selectAnswer(e) {
+
+  clearInterval(timer);
 
   const selectedBtn = e.target;
 
@@ -355,7 +402,6 @@ function selectAnswer(e) {
 
   nextBtn.style.display = "block";
 }
-
 nextBtn.addEventListener("click", () => {
 
   currentQuestionIndex++;
@@ -366,12 +412,16 @@ nextBtn.addEventListener("click", () => {
 
   } else {
 
+    clearInterval(timer);
+
     questionElement.innerText =
       `Quiz Finished 🎉 Your Score: ${score}/25`;
 
     answerButtons.innerHTML = "";
 
     nextBtn.style.display = "none";
+
+    timerElement.innerText = "Quiz Over";
   }
 });
 
