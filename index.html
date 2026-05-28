@@ -1,30 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quiz App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Quiz App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Dark Mode Button -->
+  <button id="dark-mode-toggle">🌙</button>
+
   <div class="container">
-    <h1>Quiz App 🎯</h1>
 
-    <div id="quiz-box">
-      <h2 id="question">Question goes here</h2>
+    <!-- Login -->
+    <div id="login-box">
+      <h1>Quiz App 🎯</h1>
 
-      <div id="answer-buttons" class="btn-container">
-        <!-- Buttons come from JS -->
+      <input type="text" id="username" placeholder="Enter your name">
+
+      <select id="category">
+        <option value="all">All Categories</option>
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="js">JavaScript</option>
+      </select>
+
+      <button id="start-btn">Start Quiz</button>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz-box" class="hide">
+
+      <div class="top-bar">
+        <p id="player-name"></p>
+        <p>⏰ <span id="timer">15</span>s</p>
       </div>
+
+      <div class="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+
+      <h2 id="question">Question</h2>
+
+      <div id="answer-buttons" class="btn-container"></div>
 
       <button id="next-btn">Next</button>
     </div>
 
+    <!-- Result -->
     <div id="result-box" class="hide">
-      <h2>Your Score: <span id="score"></span></h2>
+      <h2 id="result-text"></h2>
       <button id="restart-btn">Restart Quiz 🔄</button>
     </div>
+
   </div>
 
   <script src="script.js"></script>

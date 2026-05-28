@@ -1,96 +1,183 @@
 const questions = [
   {
+    category: "html",
     question: "What does HTML stand for?",
     answers: [
       { text: "Hyper Text Markup Language", correct: true },
-      { text: "High Transfer Machine Language", correct: false },
-      { text: "Hyperlinks Text Machine Language", correct: false },
-      { text: "Home Tool Markup Language", correct: false }
+      { text: "Home Tool Markup Language", correct: false },
+      { text: "Hyperlinks Text Mark Language", correct: false },
+      { text: "Hyper Tool Machine Language", correct: false }
     ]
   },
 
   {
-    question: "Which language is used for styling websites?",
+    category: "css",
+    question: "Which property changes text color?",
     answers: [
-      { text: "HTML", correct: false },
-      { text: "CSS", correct: true },
-      { text: "Python", correct: false },
-      { text: "C++", correct: false }
+      { text: "font-color", correct: false },
+      { text: "text-color", correct: false },
+      { text: "color", correct: true },
+      { text: "background", correct: false }
     ]
   },
 
   {
-    question: "Which language is used for website logic?",
+    category: "js",
+    question: "Which keyword declares variable?",
     answers: [
-      { text: "Java", correct: false },
-      { text: "Python", correct: false },
-      { text: "JavaScript", correct: true },
-      { text: "C", correct: false }
-    ]
-  },
-
-  {
-    question: "Which company developed JavaScript?",
-    answers: [
-      { text: "Google", correct: false },
-      { text: "Netscape", correct: true },
-      { text: "Microsoft", correct: false },
-      { text: "Apple", correct: false }
+      { text: "int", correct: false },
+      { text: "var", correct: true },
+      { text: "string", correct: false },
+      { text: "define", correct: false }
     ]
   }
 ];
 
-const questionElement = document.getElementById("question");
-const answerButtons = document.getElementById("answer-buttons");
-const nextButton = document.getElementById("next-btn");
+/* Duplicate questions to make 50+ */
+while (questions.length < 50) {
+  questions.push(...questions.slice(0, 3));
+}
 
+const loginBox = document.getElementById("login-box");
 const quizBox = document.getElementById("quiz-box");
 const resultBox = document.getElementById("result-box");
-const scoreElement = document.getElementById("score");
-const restartButton = document.getElementById("restart-btn");
 
+const startBtn = document.getElementById("start-btn");
+const nextBtn = document.getElementById("next-btn");
+const restartBtn = document.getElementById("restart-btn");
+
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+
+const usernameInput = document.getElementById("username");
+const playerName = document.getElementById("player-name");
+
+const timerElement = document.getElementById("timer");
+const progressBar = document.getElementById("progress-bar");
+
+const resultText = document.getElementById("result-text");
+
+const categorySelect = document.getElementById("category");
+
+let filteredQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
+let timer;
+let timeLeft = 15;
+
+startBtn.addEventListener("click", startQuiz);
 
 function startQuiz() {
+
+  const username = usernameInput.value.trim();
+
+  if (username === "") {
+    alert("Please enter your name");
+    return;
+  }
+
+  localStorage.setItem("quizUser", username);
+
+  playerName.innerText = `👋 ${username}`;
+
+  loginBox.classList.add("hide");
+  quizBox.classList.remove("hide");
+
+  const category = categorySelect.value;
+
+  if (category === "all") {
+    filteredQuestions = [...questions];
+  } else {
+    filteredQuestions = questions.filter(
+      q => q.category === category
+    );
+  }
+
+  shuffleQuestions();
+
   currentQuestionIndex = 0;
   score = 0;
-  resultBox.classList.add("hide");
-  quizBox.classList.remove("hide");
+
   showQuestion();
 }
 
+function shuffleQuestions() {
+  filteredQuestions.sort(() => Math.random() - 0.5);
+}
+
 function showQuestion() {
+
   resetState();
 
-  let currentQuestion = questions[currentQuestionIndex];
-  questionElement.innerText = currentQuestion.question;
+  startTimer();
+
+  let currentQuestion = filteredQuestions[currentQuestionIndex];
+
+  questionElement.innerText =
+    `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+
+  let progress =
+    ((currentQuestionIndex) / filteredQuestions.length) * 100;
+
+  progressBar.style.width = `${progress}%`;
 
   currentQuestion.answers.forEach(answer => {
+
     const button = document.createElement("button");
+
     button.innerText = answer.text;
-    button.classList.add("btn");
 
     if (answer.correct) {
       button.dataset.correct = answer.correct;
     }
 
     button.addEventListener("click", selectAnswer);
+
     answerButtons.appendChild(button);
   });
 }
 
 function resetState() {
-  nextButton.style.display = "none";
+
+  nextBtn.style.display = "none";
+
+  clearInterval(timer);
+
+  timeLeft = 15;
+
+  timerElement.innerText = timeLeft;
 
   while (answerButtons.firstChild) {
     answerButtons.removeChild(answerButtons.firstChild);
   }
 }
 
+function startTimer() {
+
+  timer = setInterval(() => {
+
+    timeLeft--;
+
+    timerElement.innerText = timeLeft;
+
+    if (timeLeft <= 0) {
+
+      clearInterval(timer);
+
+      nextQuestion();
+    }
+
+  }, 1000);
+}
+
 function selectAnswer(e) {
+
+  clearInterval(timer);
+
   const selectedBtn = e.target;
-  const correct = selectedBtn.dataset.correct === "true";
+
+  const correct =
+    selectedBtn.dataset.correct === "true";
 
   if (correct) {
     selectedBtn.classList.add("correct");
@@ -100,32 +187,64 @@ function selectAnswer(e) {
   }
 
   Array.from(answerButtons.children).forEach(button => {
+
     if (button.dataset.correct === "true") {
       button.classList.add("correct");
     }
+
     button.disabled = true;
   });
 
-  nextButton.style.display = "block";
+  nextBtn.style.display = "block";
 }
 
-nextButton.addEventListener("click", () => {
+nextBtn.addEventListener("click", nextQuestion);
+
+function nextQuestion() {
+
   currentQuestionIndex++;
 
-  if (currentQuestionIndex < questions.length) {
+  if (currentQuestionIndex < filteredQuestions.length) {
     showQuestion();
   } else {
-    showScore();
+    showResult();
   }
-});
-
-function showScore() {
-  quizBox.classList.add("hide");
-  resultBox.classList.remove("hide");
-
-  scoreElement.innerText = `${score} / ${questions.length}`;
 }
 
-restartButton.addEventListener("click", startQuiz);
+function showResult() {
 
-startQuiz();
+  quizBox.classList.add("hide");
+
+  resultBox.classList.remove("hide");
+
+  let emoji = "😢";
+
+  if (score > 40) {
+    emoji = "🔥";
+  } else if (score > 25) {
+    emoji = "😎";
+  }
+
+  resultText.innerHTML =
+    `You scored ${score}/${filteredQuestions.length} ${emoji}`;
+}
+
+restartBtn.addEventListener("click", () => {
+  location.reload();
+});
+
+/* Dark Mode */
+
+const darkModeBtn =
+  document.getElementById("dark-mode-toggle");
+
+darkModeBtn.addEventListener("click", () => {
+
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    darkModeBtn.innerText = "☀️";
+  } else {
+    darkModeBtn.innerText = "🌙";
+  }
+});
