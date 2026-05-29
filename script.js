@@ -274,7 +274,116 @@ const questions = [
       { text: "<title>", correct: false },
       { text: "<p>", correct: false }
     ]
-  }
+  },
+  {
+  category: "gk",
+  question: "What is the capital of India?",
+  answers: [
+    { text: "Mumbai", correct: false },
+    { text: "Delhi", correct: true },
+    { text: "Pune", correct: false },
+    { text: "Kolkata", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Who is known as the Father of the Nation in India?",
+  answers: [
+    { text: "Bhagat Singh", correct: false },
+    { text: "Mahatma Gandhi", correct: true },
+    { text: "Subhash Chandra Bose", correct: false },
+    { text: "Jawaharlal Nehru", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Which planet is known as the Red Planet?",
+  answers: [
+    { text: "Earth", correct: false },
+    { text: "Mars", correct: true },
+    { text: "Venus", correct: false },
+    { text: "Jupiter", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "How many continents are there in the world?",
+  answers: [
+    { text: "5", correct: false },
+    { text: "6", correct: false },
+    { text: "7", correct: true },
+    { text: "8", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Which is the largest ocean in the world?",
+  answers: [
+    { text: "Indian Ocean", correct: false },
+    { text: "Atlantic Ocean", correct: false },
+    { text: "Pacific Ocean", correct: true },
+    { text: "Arctic Ocean", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Who invented the telephone?",
+  answers: [
+    { text: "Albert Einstein", correct: false },
+    { text: "Alexander Graham Bell", correct: true },
+    { text: "Nikola Tesla", correct: false },
+    { text: "Thomas Edison", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "What is the national animal of India?",
+  answers: [
+    { text: "Lion", correct: false },
+    { text: "Tiger", correct: true },
+    { text: "Elephant", correct: false },
+    { text: "Leopard", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Which gas do plants absorb from the atmosphere?",
+  answers: [
+    { text: "Oxygen", correct: false },
+    { text: "Nitrogen", correct: false },
+    { text: "Carbon Dioxide", correct: true },
+    { text: "Hydrogen", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Which is the smallest prime number?",
+  answers: [
+    { text: "0", correct: false },
+    { text: "1", correct: false },
+    { text: "2", correct: true },
+    { text: "3", correct: false }
+  ]
+},
+
+{
+  category: "gk",
+  question: "Which country is famous for the Eiffel Tower?",
+  answers: [
+    { text: "Italy", correct: false },
+    { text: "Germany", correct: false },
+    { text: "France", correct: true },
+    { text: "Spain", correct: false }
+  ]
+},
 ];
 
 let timer;
@@ -287,9 +396,23 @@ let score = 0;
 
 function startQuiz() {
 
-  filteredQuestions = [...questions]
+  const selectedCategory =
+    document.getElementById("category").value;
+
+  if (selectedCategory === "all") {
+
+    filteredQuestions = [...questions];
+
+  } else {
+
+    filteredQuestions = questions.filter(
+      q => q.category === selectedCategory
+    );
+  }
+
+  filteredQuestions = filteredQuestions
     .sort(() => Math.random() - 0.5)
-    .slice(0, 25);
+    .slice(0, Math.min(25, filteredQuestions.length));
 
   currentQuestionIndex = 0;
   score = 0;
@@ -431,10 +554,35 @@ const quizBox = document.getElementById("quiz-box");
 
 startBtn.addEventListener("click", () => {
 
+  const username =
+    document.getElementById("username").value;
+
+  if (username === "") {
+    alert("Please enter your name");
+    return;
+  }
+
+  document.getElementById("player-name").innerText =
+    `Player: ${username}`;
+
   loginBox.classList.add("hide");
 
   quizBox.classList.remove("hide");
 
   startQuiz();
+});
+// Dark Mode Toggle
+const darkModeBtn =
+  document.getElementById("dark-mode-toggle");
+
+darkModeBtn.addEventListener("click", () => {
+
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    darkModeBtn.innerText = "☀️";
+  } else {
+    darkModeBtn.innerText = "🌙";
+  }
 
 });
