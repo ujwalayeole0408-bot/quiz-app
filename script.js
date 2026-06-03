@@ -384,6 +384,124 @@ const questions = [
     { text: "Spain", correct: false }
   ]
 },
+{
+  category: "html",
+  question: "Which tag creates an ordered list?",
+  answers: [
+    { text: "<ol>", correct: true },
+    { text: "<ul>", correct: false },
+    { text: "<li>", correct: false },
+    { text: "<list>", correct: false }
+  ]
+},
+
+{
+  category: "html",
+  question: "Which attribute specifies image path?",
+  answers: [
+    { text: "src", correct: true },
+    { text: "href", correct: false },
+    { text: "link", correct: false },
+    { text: "path", correct: false }
+  ]
+},
+
+{
+  category: "html",
+  question: "Which tag is used for forms?",
+  answers: [
+    { text: "<form>", correct: true },
+    { text: "<input>", correct: false },
+    { text: "<label>", correct: false },
+    { text: "<button>", correct: false }
+  ]
+},
+{
+  category: "css",
+  question: "Which property changes element width?",
+  answers: [
+    { text: "width", correct: true },
+    { text: "size", correct: false },
+    { text: "height", correct: false },
+    { text: "length", correct: false }
+  ]
+},
+
+{
+  category: "css",
+  question: "Which property rounds corners?",
+  answers: [
+    { text: "border-radius", correct: true },
+    { text: "corner-radius", correct: false },
+    { text: "round", correct: false },
+    { text: "radius", correct: false }
+  ]
+},
+
+{
+  category: "css",
+  question: "Which property changes font family?",
+  answers: [
+    { text: "font-family", correct: true },
+    { text: "font-style", correct: false },
+    { text: "family", correct: false },
+    { text: "text-font", correct: false }
+  ]
+},
+
+{
+  category: "css",
+  question: "Which property controls element spacing outside?",
+  answers: [
+    { text: "margin", correct: true },
+    { text: "padding", correct: false },
+    { text: "spacing", correct: false },
+    { text: "gap", correct: false }
+  ]
+},
+{
+  category: "js",
+  question: "Which keyword declares block scoped variable?",
+  answers: [
+    { text: "let", correct: true },
+    { text: "var", correct: false },
+    { text: "const", correct: false },
+    { text: "define", correct: false }
+  ]
+},
+
+{
+  category: "js",
+  question: "Which method shows popup alert?",
+  answers: [
+    { text: "alert()", correct: true },
+    { text: "popup()", correct: false },
+    { text: "message()", correct: false },
+    { text: "prompt()", correct: false }
+  ]
+},
+
+{
+  category: "js",
+  question: "Which symbol is used for strict inequality?",
+  answers: [
+    { text: "!==", correct: true },
+    { text: "!=", correct: false },
+    { text: "===", correct: false },
+    { text: "=", correct: false }
+  ]
+},
+
+{
+  category: "js",
+  question: "Which event occurs on button click?",
+  answers: [
+    { text: "onclick", correct: true },
+    { text: "onhover", correct: false },
+    { text: "onchange", correct: false },
+    { text: "onsubmit", correct: false }
+  ]
+}
 ];
 
 let timer;
@@ -412,7 +530,7 @@ function startQuiz() {
 
   filteredQuestions = filteredQuestions
     .sort(() => Math.random() - 0.5)
-    .slice(0, Math.min(25, filteredQuestions.length));
+    .slice(0, Math.min(10, filteredQuestions.length));
 
   currentQuestionIndex = 0;
   score = 0;
@@ -432,8 +550,7 @@ function showQuestion() {
     filteredQuestions[currentQuestionIndex];
 
   questionElement.innerText =
-  `Question ${currentQuestionIndex + 1}/25: ${currentQuestion.question}`;
-
+   `Question ${currentQuestionIndex + 1}/${filteredQuestions.length}: ${currentQuestion.question}`;
   currentQuestion.answers.forEach(answer => {
 
     const button = document.createElement("button");
@@ -486,7 +603,7 @@ function startTimer() {
       } else {
 
         questionElement.innerText =
-          `Quiz Finished 🎉 Your Score: ${score}/25`;
+          `Quiz Finished 🎉 Your Score: ${score}/${filteredQuestions.length}`
 
         answerButtons.innerHTML = "";
 
@@ -538,7 +655,7 @@ nextBtn.addEventListener("click", () => {
     clearInterval(timer);
 
     questionElement.innerText =
-      `Quiz Finished 🎉 Your Score: ${score}/25`;
+      `Quiz Finished 🎉 Your Score: ${score}/${filteredQuestions.length}`
 
     answerButtons.innerHTML = "";
 
